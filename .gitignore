@@ -23,6 +23,7 @@ wheels/
 # Agent state and logs
 agent_state.json
 *_agent_state.json
+*_state.json
 *.log
 
 # Virtual environments
