@@ -13,6 +13,13 @@ from pathlib import Path
 import traceback
 
 
+# Constants
+MAX_HEALTH_HISTORY_SIZE = 100
+MAX_REPAIR_HISTORY_SIZE = 100
+MAX_UPTIME_SECONDS = 86400  # 24 hours
+DEFAULT_HEALTH_CHECK_INTERVAL = 60  # seconds
+
+
 class HealthMonitor:
     """Monitors agent health and detects issues."""
     
@@ -52,9 +59,9 @@ class HealthMonitor:
         self.last_check_time = datetime.now()
         self.health_history.append(results)
         
-        # Keep only last 100 health checks
-        if len(self.health_history) > 100:
-            self.health_history = self.health_history[-100:]
+        # Keep only last MAX_HEALTH_HISTORY_SIZE health checks
+        if len(self.health_history) > MAX_HEALTH_HISTORY_SIZE:
+            self.health_history = self.health_history[-MAX_HEALTH_HISTORY_SIZE:]
             
         return results
     
@@ -201,7 +208,7 @@ class SelfRepairSystem:
                 "timestamp": datetime.now().isoformat(),
                 "results": results
             })
-            self.state_persistence.set("repair_history", repair_history[-100:])
+            self.state_persistence.set("repair_history", repair_history[-MAX_REPAIR_HISTORY_SIZE:])
             
         return results
 
@@ -211,9 +218,11 @@ class IntelligentAgent:
     Main Intelligent Agent with long-term survival, self-repair, and self-expansion.
     """
     
-    def __init__(self, name: str = "Browser4AGI", state_file: str = "agent_state.json"):
+    def __init__(self, name: str = "Browser4AGI", state_file: str = "agent_state.json", 
+                 health_check_interval: int = DEFAULT_HEALTH_CHECK_INTERVAL):
         self.name = name
         self.running = False
+        self.health_check_interval = health_check_interval
         
         # Setup logging
         logging.basicConfig(
@@ -258,8 +267,8 @@ class IntelligentAgent:
         def check_uptime():
             """Check if agent has been running too long without restart."""
             uptime = (datetime.now() - self.start_time).total_seconds()
-            # Consider unhealthy if running for more than 24 hours
-            return uptime < 86400
+            # Consider unhealthy if running for more than MAX_UPTIME_SECONDS
+            return uptime < MAX_UPTIME_SECONDS
             
         self.health_monitor.add_check("state_persistence", check_state_persistence)
         self.health_monitor.add_check("uptime", check_uptime)
@@ -326,7 +335,6 @@ class IntelligentAgent:
         self.logger.info(f"Agent {self.name} starting...")
         
         start_time = time.time()
-        health_check_interval = 60  # Check health every 60 seconds
         last_health_check = 0
         
         try:
@@ -334,7 +342,7 @@ class IntelligentAgent:
                 current_time = time.time()
                 
                 # Perform periodic health checks and self-repair
-                if current_time - last_health_check >= health_check_interval:
+                if current_time - last_health_check >= self.health_check_interval:
                     health_status = self.perform_health_check()
                     self.logger.info(f"Health status: {health_status['overall_status']}")
                     

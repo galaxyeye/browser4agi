@@ -1,12 +1,18 @@
 """
 Web interaction capabilities for the intelligent agent.
 Provides browser automation, web scraping, and API interaction.
+NOTE: Current implementations are simulated. For production use, integrate with
+real libraries like requests, beautifulsoup4, playwright, or selenium.
 """
 
 import logging
 from typing import Dict, Any, Optional, List
 from datetime import datetime
 import json
+
+
+# Constants
+MAX_HISTORY_SIZE = 100
 
 
 class WebNavigationCapability:
@@ -41,10 +47,10 @@ class WebScraperCapability:
         self.scraped_data = {}
         self.logger = logging.getLogger("WebScraper")
         
-    def scrape(self, url: str, selector: Optional[str] = None) -> Dict[str, Any]:
+    def scrape_simulated(self, url: str, selector: Optional[str] = None) -> Dict[str, Any]:
         """
-        Scrape content from a URL.
-        In a real implementation, this would use libraries like BeautifulSoup or Playwright.
+        Simulate scraping content from a URL.
+        For production use, integrate with BeautifulSoup, lxml, or Playwright.
         """
         self.logger.info(f"Scraping {url}" + (f" with selector {selector}" if selector else ""))
         
@@ -59,7 +65,10 @@ class WebScraperCapability:
         self.scraped_data[url] = result
         return result
     
-    def get_scraped_data(self, url: str) -> Optional[Dict[str, Any]]:
+    # Keep backward compatibility
+    def scrape(self, url: str, selector: Optional[str] = None) -> Dict[str, Any]:
+        """Backward compatible wrapper for scrape_simulated."""
+        return self.scrape_simulated(url, selector)
         """Get previously scraped data for a URL."""
         return self.scraped_data.get(url)
 
@@ -71,10 +80,10 @@ class APIInteractionCapability:
         self.request_history = []
         self.logger = logging.getLogger("APIInteraction")
         
-    def call_api(self, endpoint: str, method: str = "GET", data: Optional[Dict] = None) -> Dict[str, Any]:
+    def call_api_simulated(self, endpoint: str, method: str = "GET", data: Optional[Dict] = None) -> Dict[str, Any]:
         """
-        Call an API endpoint.
-        In a real implementation, this would use libraries like requests or httpx.
+        Simulate calling an API endpoint.
+        For production use, integrate with requests, httpx, or aiohttp libraries.
         """
         self.logger.info(f"{method} request to {endpoint}")
         
@@ -89,6 +98,11 @@ class APIInteractionCapability:
         
         self.request_history.append(result)
         return result
+    
+    # Keep backward compatibility
+    def call_api(self, endpoint: str, method: str = "GET", data: Optional[Dict] = None) -> Dict[str, Any]:
+        """Backward compatible wrapper for call_api_simulated."""
+        return self.call_api_simulated(endpoint, method, data)
     
     def get_request_history(self) -> List[Dict[str, Any]]:
         """Get API request history."""
