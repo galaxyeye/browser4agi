@@ -1,0 +1,7 @@
+# Core dependencies for Browser4AGI
+# No external dependencies required for basic functionality
+# Optional dependencies for production use:
+# requests>=2.31.0  # For real HTTP requests
+# beautifulsoup4>=4.12.0  # For web scraping
+# playwright>=1.40.0  # For browser automation
+# httpx>=0.25.0  # For async HTTP requests

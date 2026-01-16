@@ -1,0 +1,37 @@
+{
+  "agent": {
+    "name": "Browser4AGI",
+    "state_file": "agent_state.json",
+    "log_file": "agent.log"
+  },
+  "health_monitoring": {
+    "check_interval_seconds": 60,
+    "max_history_entries": 100
+  },
+  "self_repair": {
+    "enabled": true,
+    "auto_repair_on_unhealthy": true
+  },
+  "capabilities": {
+    "web_navigation": {
+      "enabled": true
+    },
+    "web_scraper": {
+      "enabled": true
+    },
+    "api_interaction": {
+      "enabled": true
+    },
+    "web_monitoring": {
+      "enabled": true,
+      "default_check_interval": 300
+    },
+    "web_automation": {
+      "enabled": true
+    }
+  },
+  "persistence": {
+    "auto_save": true,
+    "backup_enabled": true
+  }
+}
