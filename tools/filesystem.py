@@ -13,8 +13,10 @@ class FileSystemTool:
         """Write content to file"""
         full_path = os.path.join(self.base_path, path)
         
-        # Create directory if needed
-        os.makedirs(os.path.dirname(full_path), exist_ok=True)
+        # Create directory if needed (handle edge case where path is just a filename)
+        dir_path = os.path.dirname(full_path)
+        if dir_path:  # Only create if there's a directory component
+            os.makedirs(dir_path, exist_ok=True)
         
         try:
             with open(full_path, 'w', encoding='utf-8') as f:

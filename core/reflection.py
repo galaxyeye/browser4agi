@@ -64,6 +64,8 @@ class ReflectionV1:
         for rule_id in failed_rule_ids:
             rule = self.rule_set.get_rule(rule_id)
             if not rule:
+                # Log warning: failed rule not found in rule set
+                # This could indicate consistency issue
                 continue
             
             # Strategy 1: Narrow scope by adding conditions

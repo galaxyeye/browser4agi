@@ -57,6 +57,10 @@ class SimulationResult:
     baseline_reports: List[ExecutionReport] = field(default_factory=list)
     patched_reports: List[ExecutionReport] = field(default_factory=list)
     
+    # Improvement thresholds (configurable)
+    MAX_RULE_COUNT_DELTA: int = 5
+    MAX_COMPLEXITY_DELTA: float = 2.0
+    
     def get_success_delta(self) -> float:
         """Calculate change in success rate"""
         return self.patched_metrics.success_rate - self.baseline_metrics.success_rate
@@ -72,8 +76,8 @@ class SimulationResult:
     def is_improvement(self) -> bool:
         """Check if patch improves performance"""
         return (self.get_success_delta() > 0 and 
-                self.get_rule_count_delta() <= 5 and  # Don't explode rules
-                self.get_complexity_delta() < 2.0)  # Don't over-complicate
+                self.get_rule_count_delta() <= self.MAX_RULE_COUNT_DELTA and
+                self.get_complexity_delta() < self.MAX_COMPLEXITY_DELTA)
     
     def to_dict(self) -> Dict[str, Any]:
         return {

@@ -135,10 +135,8 @@ class LLMAdvisor:
         unsafe_keywords = ['exec', 'eval', 'code', '__']
         
         for patch in proposal.patches:
-            # Check patch type is valid
-            try:
-                PatchType(patch.patch_type.value)
-            except ValueError:
+            # Check patch type is valid (already a PatchType enum)
+            if not isinstance(patch.patch_type, PatchType):
                 return False
             
             # Check for unsafe content in changes

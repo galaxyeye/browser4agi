@@ -2,6 +2,7 @@
 Main Browser4AGI system integration
 Orchestrates the complete self-evolution loop
 """
+import json
 from typing import List, Optional
 from core.world_model import WorldModel
 from core.engine import Engine
@@ -204,7 +205,6 @@ class Browser4AGI:
     
     def export_model(self, path: str):
         """Export current WorldModel to file"""
-        import json
         data = {
             "world_model": self.world_model.to_dict(),
             "execution_history": [r.to_dict() for r in self.execution_history[-10:]],

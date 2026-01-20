@@ -1,7 +1,7 @@
 """
 PatchApplier - The only component allowed to modify WorldModel
 """
-from typing import Optional, List
+from typing import Optional, List, Tuple
 import uuid
 from core.world_model import WorldModel, WorldModelSnapshot
 from rules.rule_set import RuleSet
@@ -18,7 +18,7 @@ class PatchApplier:
     
     def __init__(self):
         self.version_history: List[WorldModelSnapshot] = []
-        self.patch_lineage: List[tuple[str, str]] = []  # (version, patch_id)
+        self.patch_lineage: List[Tuple[str, str]] = []  # (version, patch_id)
     
     def apply_patch(
         self,
